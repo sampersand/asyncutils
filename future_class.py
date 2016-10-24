@@ -7,3 +7,5 @@ class Future():
 		if self in self.finish_instance:
 			self.finish_instance.remove(self)
 		return self.future.__await__()
+	def result(self):
+		return self.future.result()

@@ -5,15 +5,6 @@ from .future_class import Future
 
 _finishes = []
 class Finish(set):
-	# def __enter__(self):
-	# 	_finishes.append(self)
-	# 	return self
-
-	# def __exit__(self, exc_type, exc_val, exc_tb):
-	# 	complete(self.clear())
-	# 	del _finishes[_finishes.index(self)]
-	# 	if exc_val:
-	# 		raise exc_val
 	def add_nowait(self, ele):
 		super().add(ele)
 
@@ -38,6 +29,16 @@ class Finish(set):
 
 	async def __aexit__(self, exc_type, exc_val, exc_tb):
 		await self.clear()
+		del _finishes[_finishes.index(self)]
+		if exc_val:
+			raise exc_val
+
+	def __enter__(self):
+		_finishes.append(self)
+		return self
+
+	def __exit__(self, exc_type, exc_val, exc_tb):
+		complete(self.clear())
 		del _finishes[_finishes.index(self)]
 		if exc_val:
 			raise exc_val

@@ -1,24 +1,20 @@
 # from inspect import *
 from .finish import _finishes
-
-def future(coro, finish_instance = None, traceback = None):
-	# s = stack()
-	# if not finish_instance:
-	# 	for frame in s:
-	# 		for name, obj in frame[0].f_locals.items():
-	# 			if isinstance(obj, finish):
-	# 				if __debug__:
-	# 					assert finish_instance is None or finish_instance is obj
-	# 				finish_instance = obj
-	# 				if not __debug__:
-	# 					break
-	# 		if finish_instance:
-	# 			break
-	# if not finish_instance:
-	# 	for frame in s:
-	# 		print('{:<20}'.format(frame[3]), [(name, isinstance(obj, finish))for name, obj in frame[0].f_locals.items()])
+from asyncio import iscoroutine
+from .random_sleep import random_sleep
+async def getval(non_coro_func, args, sleep):
+	if sleep:
+		await random_sleep(sleep)
+	return non_coro_func(*args)
+def future(func, *args_for_non_coro, sleep = False, finish_instance = None):
 	if finish_instance == None:
 		finish_instance = _finishes[-1]
-	assert finish_instance != None
 
-	return finish_instance.future(coro)
+	if not iscoroutine(func):
+		func = getval(func, args_for_non_coro, sleep)
+	else:
+		assert not sleep, 'only can use random sleep on non-coroutine'
+	return finish_instance.future(func)
+
+def cont(func, *args_for_non_coro):
+	return future(func, *args_for_non_coro)
