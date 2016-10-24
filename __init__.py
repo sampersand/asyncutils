@@ -1,10 +1,6 @@
-from os import getcwd
-print(getcwd())
 from asyncio import ensure_future
-class END_QUEUE(): pass
-END_QUEUE = END_QUEUE()
 from .random_sleep import random_sleep, sleep
-from .finish import finish
+from .finish import Finish; finish = Finish;
 from .future import future
 from .complete import complete
 from .aiter import aiter

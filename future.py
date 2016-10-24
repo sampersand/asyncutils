@@ -1,5 +1,5 @@
 # from inspect import *
-from .finish import finish
+from .finish import _finishes
 
 def future(coro, finish_instance = None, traceback = None):
 	# s = stack()
@@ -18,7 +18,7 @@ def future(coro, finish_instance = None, traceback = None):
 	# 	for frame in s:
 	# 		print('{:<20}'.format(frame[3]), [(name, isinstance(obj, finish))for name, obj in frame[0].f_locals.items()])
 	if finish_instance == None:
-		finish_instance = finish._finishes[-1]
+		finish_instance = _finishes[-1]
 	assert finish_instance != None
 
-	finish_instance.future(coro)
+	return finish_instance.future(coro)
