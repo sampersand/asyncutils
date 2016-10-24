@@ -29,7 +29,9 @@ class Finish(set):
 
 	async def __aexit__(self, exc_type, exc_val, exc_tb):
 		await self.clear()
-		del _finishes[_finishes.index(self)]
+		assert not self
+		assert _finishes[-1] is self
+		_finishes.pop()
 		if exc_val:
 			raise exc_val
 
